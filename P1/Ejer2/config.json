@@ -1,0 +1,7 @@
+{
+  "texto": "I am a motivated and curious person who enjoys learning new things and improving my skills. I like taking on challenges that help me grow both personally and professionally. I value teamwork, creativity, and always giving my best in everything I do.",
+  "model_llm": "sshleifer/distilbart-cnn-12-6",
+  "model_translation": "Helsinki-NLP/opus-mt-tc-big-en-es",
+  "model_sentiment":"distilbert-base-uncased-finetuned-sst-2-english",
+  "huggingface_api_token": ""
+}
