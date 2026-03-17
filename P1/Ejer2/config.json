@@ -1,7 +1,6 @@
 {
-  "texto": "I am a motivated and curious person who enjoys learning new things and improving my skills. I like taking on challenges that help me grow both personally and professionally. I value teamwork, creativity, and always giving my best in everything I do.",
+  "texto": "Spider-Man is a fictional superhero created by writer Stan Lee and artist Steve Ditko, first appearing in Amazing Fantasy number 15 in August 1962. The character is Peter Parker, a high school student from Queens, New York, who gains spider-like abilities after being bitten by a radioactive spider. His powers include superhuman strength, the ability to cling to surfaces, and a precognitive danger sense he calls his spider-sense. Using his scientific genius, Peter builds web-shooters that allow him to swing between buildings. After failing to stop a burglar who later kills his uncle Ben, Peter adopts the mantra that with great power comes great responsibility. He balances his life as a student and later a photographer for the Daily Bugle with his career as a crime-fighting superhero in New York City.",
   "model_llm": "sshleifer/distilbart-cnn-12-6",
   "model_translation": "Helsinki-NLP/opus-mt-tc-big-en-es",
-  "model_sentiment":"distilbert-base-uncased-finetuned-sst-2-english",
-  "huggingface_api_token": ""
+  "model_sentiment":"cardiffnlp/twitter-roberta-base-sentiment-latest"
 }
