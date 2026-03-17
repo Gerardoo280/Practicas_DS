@@ -94,8 +94,8 @@ class Contexto:
 def guardar_csv(datos, nombre_archivo):
     with open(nombre_archivo, mode='w', newline='', encoding='utf-8') as archivo_csv:
         writer = csv.DictWriter(archivo_csv, fieldnames=CAMPOS)
-        writer.writeheader()  # Escribir encabezados
-        writer.writerows(datos)   # Escribir datos
+        writer.writeheader()
+        writer.writerows(datos)
 
 
 if __name__ == "__main__":
