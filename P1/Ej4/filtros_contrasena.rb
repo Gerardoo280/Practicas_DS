@@ -1,45 +1,48 @@
 require_relative 'filtro'
 
-# Filtro 3: Comprueba que la contraseña tiene al menos 8 caracteres
+#Comprueba longitud de contraseña
 class FiltroContrasenaLongitud < Filtro
-  LONGITUD_MINIMA = 8
 
-  def ejecutar(credenciales)
-    contrasena = credenciales[:contrasena]
-    if contrasena.length >= LONGITUD_MINIMA
-      puts "[OK] La contraseña tiene al menos #{LONGITUD_MINIMA} caracteres"
-      true
+  def ejecutar(correo, contrasena)
+    if contrasena.length >= 8
+      puts "OK - La contraseña tiene 8 o más caracteres"
+      return true
     else
-      puts "[ERROR] La contraseña es demasiado corta. Mínimo #{LONGITUD_MINIMA} caracteres"
-      false
+      puts "ERROR - La contraseña tieene menos de 8 caracteres"
+      return false
     end
   end
 end
 
-# Filtro 4: Comprueba que la contraseña tiene al menos un número
+#Comprobar q tiene un numero al menos
 class FiltroContrasenaNumero < Filtro
-  def ejecutar(credenciales)
-    contrasena = credenciales[:contrasena]
-    if contrasena.match?(/\d/)
-      puts "[OK] La contraseña contiene al menos un número"
-      true
-    else
-      puts "[ERROR] La contraseña debe contener al menos un número"
-      false
+  NUMEROS = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+ 
+  def ejecutar(correo, contrasena)
+    contrasena.each_char do |letra|
+      if NUMEROS.include?(letra)
+        puts "OK - La contraseña contiene al menos un número"
+        return true
+      end
     end
+    puts "ERROR - La contraseña debe contener al menos un número"
+    return false
   end
 end
 
-# Filtro 5: Comprueba que la contraseña tiene al menos un carácter especial
+# Comprobar caracter especial
 class FiltroContrasenaCaracterEspecial < Filtro
-  def ejecutar(credenciales)
-    contrasena = credenciales[:contrasena]
-    if contrasena.match?(/[!@#$%^&*()_+\-=\[\]{}|;':",.<>?\/\\]/)
-      puts "[OK] La contraseña contiene al menos un carácter especial"
-      true
-    else
-      puts "[ERROR] La contraseña debe contener al menos un carácter especial (!@#$%...)"
-      false
+  def ejecutar(correo, contrasena)
+    i = 0
+    while i < contrasena.length
+      letra = contrasena[i]
+      if !(letra =~ /[a-zA-Z0-9]/)
+        puts "OK - La contraseña contiene al menos un carácter especial"
+        return true
+      end
+      i = i + 1
     end
+    puts "ERROR - La contraseña debe contener al menos un carácter especial"
+    return false
   end
 end

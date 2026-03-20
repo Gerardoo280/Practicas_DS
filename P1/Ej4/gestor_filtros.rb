@@ -1,16 +1,15 @@
-require_relative 'cadena'
+require_relative 'Cadena'
 
 # Objetivo: la clase que procesa la autenticación si todos los filtros pasan
 class Autenticacion
-  def ejecutar(credenciales)
-    puts "\n✓ Autenticación completada con éxito para: #{credenciales[:correo]}"
+  def ejecutar(correo, contrasena)
+    puts "\n Autenticación completada con éxito para: #{correo}"
   end
 end
 
-# GestorFiltros: crea la cadena y gestiona qué filtros se añaden
 class GestorFiltros
   def initialize
-    @cadena = CadenaFiltros.new
+    @cadena = Cadena.new
     objetivo = Autenticacion.new
     @cadena.establecer_objetivo(objetivo)
   end
@@ -19,7 +18,7 @@ class GestorFiltros
     @cadena.agregar_filtro(filtro)
   end
 
-  def procesar_peticion(credenciales)
-    @cadena.ejecutar(credenciales)
+  def procesar_peticion(correo, contrasena)
+    @cadena.ejecutar(correo, contrasena)
   end
 end

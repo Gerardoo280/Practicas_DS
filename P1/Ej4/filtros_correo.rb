@@ -1,32 +1,32 @@
 require_relative 'filtro'
 
-# Filtro 1: Comprueba que hay texto antes del @
 class FiltroCorreoTextoAntes < Filtro
-  def ejecutar(credenciales)
-    correo = credenciales[:correo]
-    parte_antes = correo.split("@").first
-    if parte_antes.nil? || parte_antes.empty?
-      puts "[ERROR] El correo no tiene texto antes del @"
+  def ejecutar(correo, contrasena)
+    posicion_arroba = correo.index("@")
+
+    if posicion_arroba == nil || posicion_arroba == 0
+      puts "ERROR - El correo no tiene texto antes del @"
       return false
     end
-    puts "[OK] El correo tiene texto antes del @"
-    true
+
+    puts "OK - El correo tiene texto antes del @"
+    return true
   end
 end
 
-# Filtro 2: Comprueba que el dominio sea gmail.com o hotmail.com
-class FiltroCorreoDominio < Filtro
-  DOMINIOS_VALIDOS = ["gmail.com", "hotmail.com"]
 
-  def ejecutar(credenciales)
-    correo = credenciales[:correo]
-    dominio = correo.split("@").last
-    if DOMINIOS_VALIDOS.include?(dominio)
-      puts "[OK] El dominio '#{dominio}' es válido"
-      true
+class FiltroCorreoDominio < Filtro
+
+  def ejecutar(correo, contrasena)
+    posicion_arroba = correo.index("@")
+    dominio = correo[posicion_arroba + 1, correo.length]
+
+    if dominio == "gmail.com" || dominio == "hotmail.com" || dominio == "correo.ugr.es" || dominio == "go.ugr.es"
+      puts "OK - El dominio '#{dominio}' es correcto y válido"
+      return true
     else
-      puts "[ERROR] El dominio '#{dominio}' no está permitido. Solo se aceptan: #{DOMINIOS_VALIDOS.join(', ')}"
-      false
+      puts "ERROR - El dominio '#{dominio}' no es válido. Solo son validos gmail.com, hotmail.com, correo.ugr.es y go.ugr.es"
+      return false
     end
   end
 end
