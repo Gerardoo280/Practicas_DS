@@ -1,0 +1,1 @@
+API_URL = "https://router.huggingface.co/hf-inference/models/"
