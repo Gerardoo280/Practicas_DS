@@ -1,7 +1,9 @@
 import json
 from dotenv import load_dotenv
 import os
-from LLM import BasicLLM, TranslationDecorator, SentimentDecorator
+from basic_llm import BasicLLM
+from translation_decorator import TranslationDecorator
+from sentiment_decorator import SentimentDecorator
 
 with open("config.json", "r") as file:
   config = json.load(file)
