@@ -1,4 +1,4 @@
-import 'package:ejer3/patronFiltros.dart';
+import 'package:ejer3/patron_filtros.dart';
 
 class FiltroLongitud extends Filtro {
   @override

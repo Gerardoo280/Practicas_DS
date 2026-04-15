@@ -50,9 +50,3 @@ class GestorFiltros {
     return cadena.ejecutar(correo, contrasena);
   }
 }
-
-class Client {
-  String? intentarAutenticacion(String correo, String contrasena, GestorFiltros gestorFiltros) {
-    return gestorFiltros.procesarPeticion(correo, contrasena);
-  }
-}
