@@ -7,7 +7,7 @@ class BasicSecretKeeper implements SecretKeeper {
   final GenerativeModel _model;
   late final ChatSession _chat;
 
-  static const String _apiKey = "TU_API_AQUI";
+  static const String _apiKey = "TU API KEY AQUI";
 
   BasicSecretKeeper(this.secretWord)
     : _model = GenerativeModel(
