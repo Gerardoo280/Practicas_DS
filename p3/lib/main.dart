@@ -1,4 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:p3/Servicioturistico/Paquete.dart';
+import 'package:p3/Servicioturistico/Vuelo.dart';
+import 'package:p3/Servicioturistico/Hotel.dart';
+import 'package:p3/Servicioturistico/TarifaLowCost.dart';
+import 'package:p3/Servicioturistico/TarifaBusiness.dart';
+import 'package:p3/Servicioturistico/Soloalojamiento.dart';
+import 'package:p3/Servicioturistico/Todoincluido.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -7,115 +15,213 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Paquetes Turísticos',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+  const MyHomePage({super.key});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  final Paquete _paquete = Paquete('Mi Paquete');
 
-  void _incrementCounter() {
+  // Campos del formulario
+  final _idCtrl = TextEditingController();
+  final _precioCtrl = TextEditingController();
+  final _nochesCtrl = TextEditingController();
+
+  String _tipoServicio = 'vuelo';    // 'vuelo' o 'hotel'
+  String _politicaVuelo = 'lowcost'; // 'lowcost' o 'business'
+  String _politicaHotel = 'solo';    // 'solo' o 'todo'
+
+  void _agregarServicio() {
+    final texto = _idCtrl.text.trim();
+    final precio = double.tryParse(_precioCtrl.text) ?? 0;
+
+    if (texto.isEmpty || precio <= 0) return;
+
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      if (_tipoServicio == 'vuelo') {
+        final politica =
+        _politicaVuelo == 'lowcost' ? TarifaLowCost() : TarifaBusiness();
+        _paquete.agregarservicio(
+          Vuelo(id: texto, precioBase: precio, politica: politica),
+        );
+      } else {
+        final noches = int.tryParse(_nochesCtrl.text) ?? 1;
+        final politica =
+        _politicaHotel == 'solo' ? Soloalojamiento() : Todoincluido();
+        _paquete.agregarservicio(
+          Hotel(nombre: texto, precioNoche: precio, noches: noches, politica: politica),
+        );
+      }
     });
+
+    _idCtrl.clear();
+    _precioCtrl.clear();
+    _nochesCtrl.clear();
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: const Text('Paquetes Turísticos'),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
+      body: Padding(
+        padding: const EdgeInsets.all(16),
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: .center,
           children: [
-            const Text('You have pushed the button this many times:'),
+            // ── Tipo de servicio ──────────────────────────────────────────
+            Row(
+              children: [
+                const Text('Tipo: '),
+                ToggleButtons(
+                  isSelected: [
+                    _tipoServicio == 'vuelo',
+                    _tipoServicio == 'hotel',
+                  ],
+                  onPressed: (i) => setState(() {
+                    _tipoServicio = i == 0 ? 'vuelo' : 'hotel';
+                  }),
+                  children: const [
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: Text('Vuelo'),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: Text('Hotel'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 12),
+
+            // ── ID / Nombre ───────────────────────────────────────────────
+            TextField(
+              controller: _idCtrl,
+              decoration: InputDecoration(
+                labelText:
+                _tipoServicio == 'vuelo' ? 'ID del vuelo' : 'Nombre del hotel',
+                border: const OutlineInputBorder(),
+              ),
+            ),
+
+            const SizedBox(height: 8),
+
+            // ── Precio ────────────────────────────────────────────────────
+            TextField(
+              controller: _precioCtrl,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                labelText: _tipoServicio == 'vuelo'
+                    ? 'Precio base (€)'
+                    : 'Precio por noche (€)',
+                border: const OutlineInputBorder(),
+              ),
+            ),
+
+            // ── Noches (solo hotel) ───────────────────────────────────────
+            if (_tipoServicio == 'hotel') ...[
+              const SizedBox(height: 8),
+              TextField(
+                controller: _nochesCtrl,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  labelText: 'Número de noches',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ],
+
+            const SizedBox(height: 12),
+
+            // ── Política ──────────────────────────────────────────────────
+            if (_tipoServicio == 'vuelo')
+              DropdownButton<String>(
+                value: _politicaVuelo,
+                items: const [
+                  DropdownMenuItem(
+                      value: 'lowcost', child: Text('LowCost (base + 15 €)')),
+                  DropdownMenuItem(
+                      value: 'business', child: Text('Business (base × 1.5)')),
+                ],
+                onChanged: (v) => setState(() => _politicaVuelo = v!),
+              )
+            else
+              DropdownButton<String>(
+                value: _politicaHotel,
+                items: const [
+                  DropdownMenuItem(
+                      value: 'solo', child: Text('Solo Alojamiento')),
+                  DropdownMenuItem(
+                      value: 'todo',
+                      child: Text('Todo Incluido (+30 €/noche)')),
+                ],
+                onChanged: (v) => setState(() => _politicaHotel = v!),
+              ),
+
+            const SizedBox(height: 8),
+
+            // ── Botón añadir ──────────────────────────────────────────────
+            ElevatedButton(
+              onPressed: _agregarServicio,
+              child: const Text('Añadir servicio'),
+            ),
+
+            const Divider(height: 24),
+
+            // ── Lista de servicios ────────────────────────────────────────
+            Expanded(
+              child: ListView.builder(
+                itemCount: _paquete.servicios.length,
+                itemBuilder: (ctx, i) {
+                  final s = _paquete.servicios[i];
+                  final nombre = s is Vuelo
+                      ? 'Vuelo ${s.id}'
+                      : 'Hotel ${(s as Hotel).nombre}';
+                  return ListTile(
+                    leading: Icon(s is Vuelo ? Icons.flight : Icons.hotel),
+                    title: Text(nombre),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text('${s.getPrecio().toStringAsFixed(2)} €'),
+                        IconButton(
+                          icon: const Icon(Icons.delete, color: Colors.red),
+                          onPressed: () =>
+                              setState(() => _paquete.eliminarservicio(s)),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+
+            // ── Precio total ──────────────────────────────────────────────
             Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+              'Total: ${_paquete.getPrecio().toStringAsFixed(2)} €',
+              style: Theme.of(context).textTheme.headlineSmall,
             ),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
       ),
     );
   }
