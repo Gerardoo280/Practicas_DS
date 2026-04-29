@@ -35,43 +35,43 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final Paquete _paquete = Paquete('Mi Paquete');
+  final Paquete paquete = Paquete('Mi Paquete');
 
   // Campos del formulario
-  final _idCtrl = TextEditingController();
-  final _precioCtrl = TextEditingController();
-  final _nochesCtrl = TextEditingController();
+  final idCtrl = TextEditingController();
+  final precioCtrl = TextEditingController();
+  final nochesCtrl = TextEditingController();
 
-  String _tipoServicio = 'vuelo';    // 'vuelo' o 'hotel'
-  String _politicaVuelo = 'lowcost'; // 'lowcost' o 'business'
-  String _politicaHotel = 'solo';    // 'solo' o 'todo'
+  String tipoServicio = 'vuelo';    // 'vuelo' o 'hotel'
+  String politicaVuelo = 'lowcost'; // 'lowcost' o 'business'
+  String politicaHotel = 'solo';    // 'solo' o 'todo'
 
-  void _agregarServicio() {
-    final texto = _idCtrl.text.trim();
-    final precio = double.tryParse(_precioCtrl.text) ?? 0;
+  void agregarServicio() {
+    final texto = idCtrl.text.trim();
+    final precio = double.tryParse(precioCtrl.text) ?? 0;
 
     if (texto.isEmpty || precio <= 0) return;
 
     setState(() {
-      if (_tipoServicio == 'vuelo') {
+      if (tipoServicio == 'vuelo') {
         final politica =
-        _politicaVuelo == 'lowcost' ? TarifaLowCost() : TarifaBusiness();
-        _paquete.agregarservicio(
+        politicaVuelo == 'lowcost' ? TarifaLowCost() : TarifaBusiness();
+        paquete.agregarservicio(
           Vuelo(id: texto, precioBase: precio, politica: politica),
         );
       } else {
-        final noches = int.tryParse(_nochesCtrl.text) ?? 1;
+        final noches = int.tryParse(nochesCtrl.text) ?? 1;
         final politica =
-        _politicaHotel == 'solo' ? Soloalojamiento() : Todoincluido();
-        _paquete.agregarservicio(
+        politicaHotel == 'solo' ? Soloalojamiento() : Todoincluido();
+        paquete.agregarservicio(
           Hotel(nombre: texto, precioNoche: precio, noches: noches, politica: politica),
         );
       }
     });
 
-    _idCtrl.clear();
-    _precioCtrl.clear();
-    _nochesCtrl.clear();
+    idCtrl.clear();
+    precioCtrl.clear();
+    nochesCtrl.clear();
   }
 
   @override
@@ -85,17 +85,16 @@ class _MyHomePageState extends State<MyHomePage> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            // ── Tipo de servicio ──────────────────────────────────────────
             Row(
               children: [
                 const Text('Tipo: '),
                 ToggleButtons(
                   isSelected: [
-                    _tipoServicio == 'vuelo',
-                    _tipoServicio == 'hotel',
+                    tipoServicio == 'vuelo',
+                    tipoServicio == 'hotel',
                   ],
                   onPressed: (i) => setState(() {
-                    _tipoServicio = i == 0 ? 'vuelo' : 'hotel';
+                    tipoServicio = i == 0 ? 'vuelo' : 'hotel';
                   }),
                   children: const [
                     Padding(
@@ -113,35 +112,32 @@ class _MyHomePageState extends State<MyHomePage> {
 
             const SizedBox(height: 12),
 
-            // ── ID / Nombre ───────────────────────────────────────────────
             TextField(
-              controller: _idCtrl,
+              controller: idCtrl,
               decoration: InputDecoration(
                 labelText:
-                _tipoServicio == 'vuelo' ? 'ID del vuelo' : 'Nombre del hotel',
+                tipoServicio == 'vuelo' ? 'ID del vuelo' : 'Nombre del hotel',
                 border: const OutlineInputBorder(),
               ),
             ),
 
             const SizedBox(height: 8),
 
-            // ── Precio ────────────────────────────────────────────────────
             TextField(
-              controller: _precioCtrl,
+              controller: precioCtrl,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
-                labelText: _tipoServicio == 'vuelo'
+                labelText: tipoServicio == 'vuelo'
                     ? 'Precio base (€)'
                     : 'Precio por noche (€)',
                 border: const OutlineInputBorder(),
               ),
             ),
 
-            // ── Noches (solo hotel) ───────────────────────────────────────
-            if (_tipoServicio == 'hotel') ...[
+            if (tipoServicio == 'hotel') ...[
               const SizedBox(height: 8),
               TextField(
-                controller: _nochesCtrl,
+                controller: nochesCtrl,
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
                   labelText: 'Número de noches',
@@ -152,47 +148,44 @@ class _MyHomePageState extends State<MyHomePage> {
 
             const SizedBox(height: 12),
 
-            // ── Política ──────────────────────────────────────────────────
-            if (_tipoServicio == 'vuelo')
+            if (tipoServicio == 'vuelo')
               DropdownButton<String>(
-                value: _politicaVuelo,
+                value: politicaVuelo,
                 items: const [
                   DropdownMenuItem(
                       value: 'lowcost', child: Text('LowCost (base + 15 €)')),
                   DropdownMenuItem(
-                      value: 'business', child: Text('Business (base × 1.5)')),
+                      value: 'business', child: Text('Business (base × 3)')),
                 ],
-                onChanged: (v) => setState(() => _politicaVuelo = v!),
+                onChanged: (v) => setState(() => politicaVuelo = v!),
               )
             else
               DropdownButton<String>(
-                value: _politicaHotel,
+                value: politicaHotel,
                 items: const [
                   DropdownMenuItem(
                       value: 'solo', child: Text('Solo Alojamiento')),
                   DropdownMenuItem(
                       value: 'todo',
-                      child: Text('Todo Incluido (+30 €/noche)')),
+                      child: Text('Todo Incluido (+50 €/noche)')),
                 ],
-                onChanged: (v) => setState(() => _politicaHotel = v!),
+                onChanged: (v) => setState(() => politicaHotel = v!),
               ),
 
             const SizedBox(height: 8),
 
-            // ── Botón añadir ──────────────────────────────────────────────
             ElevatedButton(
-              onPressed: _agregarServicio,
+              onPressed: agregarServicio,
               child: const Text('Añadir servicio'),
             ),
 
             const Divider(height: 24),
 
-            // ── Lista de servicios ────────────────────────────────────────
             Expanded(
               child: ListView.builder(
-                itemCount: _paquete.servicios.length,
+                itemCount: paquete.servicios.length,
                 itemBuilder: (ctx, i) {
-                  final s = _paquete.servicios[i];
+                  final s = paquete.servicios[i];
                   final nombre = s is Vuelo
                       ? 'Vuelo ${s.id}'
                       : 'Hotel ${(s as Hotel).nombre}';
@@ -206,7 +199,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         IconButton(
                           icon: const Icon(Icons.delete, color: Colors.red),
                           onPressed: () =>
-                              setState(() => _paquete.eliminarservicio(s)),
+                              setState(() => paquete.eliminarservicio(s)),
                         ),
                       ],
                     ),
@@ -215,9 +208,8 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
 
-            // ── Precio total ──────────────────────────────────────────────
             Text(
-              'Total: ${_paquete.getPrecio().toStringAsFixed(2)} €',
+              'Total: ${paquete.getPrecio().toStringAsFixed(2)} €',
               style: Theme.of(context).textTheme.headlineSmall,
             ),
           ],
