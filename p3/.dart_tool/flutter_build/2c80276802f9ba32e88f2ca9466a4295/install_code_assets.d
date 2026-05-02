@@ -1,0 +1,1 @@
+ /home/gerardo/Desktop/Universidad/3ºCURSO/2ºCUATRI/DS/Practicas_DS/p3/.dart_tool/flutter_build/2c80276802f9ba32e88f2ca9466a4295/native_assets.json: 

@@ -1,0 +1,13 @@
+/home/gerardo/Desktop/Universidad/3ºCURSO/2ºCUATRI/DS/Practicas_DS/p3/build/linux/x64/debug/bundle/p3
+/home/gerardo/Desktop/Universidad/3ºCURSO/2ºCUATRI/DS/Practicas_DS/p3/build/linux/x64/debug/bundle/data/icudtl.dat
+/home/gerardo/Desktop/Universidad/3ºCURSO/2ºCUATRI/DS/Practicas_DS/p3/build/linux/x64/debug/bundle/lib/libflutter_linux_gtk.so
+/home/gerardo/Desktop/Universidad/3ºCURSO/2ºCUATRI/DS/Practicas_DS/p3/build/linux/x64/debug/bundle/data/flutter_assets/packages/cupertino_icons/assets/CupertinoIcons.ttf
+/home/gerardo/Desktop/Universidad/3ºCURSO/2ºCUATRI/DS/Practicas_DS/p3/build/linux/x64/debug/bundle/data/flutter_assets/NOTICES.Z
+/home/gerardo/Desktop/Universidad/3ºCURSO/2ºCUATRI/DS/Practicas_DS/p3/build/linux/x64/debug/bundle/data/flutter_assets/AssetManifest.bin
+/home/gerardo/Desktop/Universidad/3ºCURSO/2ºCUATRI/DS/Practicas_DS/p3/build/linux/x64/debug/bundle/data/flutter_assets/FontManifest.json
+/home/gerardo/Desktop/Universidad/3ºCURSO/2ºCUATRI/DS/Practicas_DS/p3/build/linux/x64/debug/bundle/data/flutter_assets/shaders/stretch_effect.frag
+/home/gerardo/Desktop/Universidad/3ºCURSO/2ºCUATRI/DS/Practicas_DS/p3/build/linux/x64/debug/bundle/data/flutter_assets/shaders/ink_sparkle.frag
+/home/gerardo/Desktop/Universidad/3ºCURSO/2ºCUATRI/DS/Practicas_DS/p3/build/linux/x64/debug/bundle/data/flutter_assets/kernel_blob.bin
+/home/gerardo/Desktop/Universidad/3ºCURSO/2ºCUATRI/DS/Practicas_DS/p3/build/linux/x64/debug/bundle/data/flutter_assets/NativeAssetsManifest.json
+/home/gerardo/Desktop/Universidad/3ºCURSO/2ºCUATRI/DS/Practicas_DS/p3/build/linux/x64/debug/bundle/data/flutter_assets/version.json
+/home/gerardo/Desktop/Universidad/3ºCURSO/2ºCUATRI/DS/Practicas_DS/p3/build/linux/x64/debug/bundle/data/flutter_assets/fonts/MaterialIcons-Regular.otf
