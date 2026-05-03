@@ -10,7 +10,11 @@ class Vuelo implements Servicioturistico {
     required this.id,
     required this.precioBase,
     required this.politica,
-  });
+  }) {
+    if (precioBase < 0) {
+      throw ArgumentError('El precio base no puede ser negativo');
+    }
+  }
 
   @override
   double getPrecio() {

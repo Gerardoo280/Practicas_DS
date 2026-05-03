@@ -12,7 +12,13 @@ class Hotel implements Servicioturistico{
     required this.precioNoche,
     required this.noches,
     required this.politica,
-  });
+  }) {
+    if (noches <= 0) {
+      throw ArgumentError('Las noches deben ser mayor que cero');
+    } else if(precioNoche <= 0) {
+      throw ArgumentError('Las noches deben tener un precio mayor que cero');
+    }
+  }
 
 
   @override
