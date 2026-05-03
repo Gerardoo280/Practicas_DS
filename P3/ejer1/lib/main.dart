@@ -19,6 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Paquetes Turísticos',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
       ),
@@ -42,9 +43,9 @@ class _MyHomePageState extends State<MyHomePage> {
   final precioCtrl = TextEditingController();
   final nochesCtrl = TextEditingController();
 
-  String tipoServicio = 'vuelo';    // 'vuelo' o 'hotel'
-  String politicaVuelo = 'lowcost'; // 'lowcost' o 'business'
-  String politicaHotel = 'solo';    // 'solo' o 'todo'
+  String tipoServicio = 'vuelo';
+  String politicaVuelo = 'lowcost';
+  String politicaHotel = 'solo';
 
   void agregarServicio() {
     final texto = idCtrl.text.trim();

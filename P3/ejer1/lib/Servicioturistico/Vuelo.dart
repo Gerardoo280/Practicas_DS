@@ -1,7 +1,7 @@
 import 'Servicioturistico.dart';
 import 'PoliticaVuelo.dart';
 
-class Vuelo implements Servicioturistico{
+class Vuelo implements Servicioturistico {
   final String id;
   final double precioBase;
   PoliticaVuelo politica;
