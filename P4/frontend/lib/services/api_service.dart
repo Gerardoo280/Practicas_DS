@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 
 class ApiService {
   // ⚠️ VERIFICAR CON BACKEND — cambiar por la IP de Claudio
-  static const String baseUrl = 'http://localhost:3000';
+  static const String baseUrl = 'http://localhost:3000/api';
 
   static Future<dynamic> get(String endpoint) async {
     final res = await http.get(Uri.parse('$baseUrl$endpoint'));
