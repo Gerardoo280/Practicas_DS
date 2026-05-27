@@ -18,15 +18,15 @@ class TareasScreen extends StatefulWidget {
 
 class _TareasScreenState extends State<TareasScreen> {
   List<Objetivo> objetivos = [];
-  int? objetivoFiltrado; // null significa mostrar todos
+  int? objetivoFiltrado;
   bool cargando = true;
   String ordenActual = 'prioridad';
 
-  // Mapa de estrategias disponibles — patrón Strategy
+  // estrategias para ordenar las tareas
   final Map<String, IOrdenStrategy> estrategias = {
     'prioridad': OrdenarPorPrioridad(),
-    'fecha':     OrdenarPorFecha(),
-    'nombre':    OrdenarPorNombre(),
+    'fecha': OrdenarPorFecha(),
+    'nombre': OrdenarPorNombre(),
   };
 
   @override
@@ -36,15 +36,16 @@ class _TareasScreenState extends State<TareasScreen> {
   }
 
   Future<void> cargarDatos() async {
-    // Limpia el árbol para no duplicar al recargar
+    // limpiamos el arbol antes de recargar para no duplicar
     for (final objetivo in widget.proyecto.getObjetivos()) {
       widget.proyecto.remove(objetivo);
     }
-    final listaObjetivos = await ObjetivoService.getByProyecto(widget.proyecto.id!);
+    final listaObjetivos =
+        await ObjetivoService.getByProyecto(widget.proyecto.id!);
     for (final objetivo in listaObjetivos) {
       final listaTareas = await TareaService.getByObjetivo(objetivo.id!);
       for (final tarea in listaTareas) objetivo.add(tarea);
-      widget.proyecto.add(objetivo); // construye el árbol Composite
+      widget.proyecto.add(objetivo);
     }
     setState(() {
       objetivos = listaObjetivos;
@@ -52,7 +53,6 @@ class _TareasScreenState extends State<TareasScreen> {
     });
   }
 
-  // Cambia la estrategia en tiempo de ejecución — patrón Strategy
   void cambiarOrden(String nuevoOrden) {
     setState(() {
       ordenActual = nuevoOrden;
@@ -60,7 +60,6 @@ class _TareasScreenState extends State<TareasScreen> {
     });
   }
 
-  // Devuelve las tareas filtradas por objetivo si hay uno seleccionado
   List<Tarea> obtenerTareasMostradas() {
     if (objetivoFiltrado == null) {
       return widget.proyecto.getTareasOrdenadas();
@@ -88,7 +87,8 @@ class _TareasScreenState extends State<TareasScreen> {
             onPressed: () async {
               Navigator.pop(context);
               await ObjetivoService.create(
-                Objetivo(nombre: controlador.text, proyectoId: widget.proyecto.id!),
+                Objetivo(
+                    nombre: controlador.text, proyectoId: widget.proyecto.id!),
               );
               cargarDatos();
             },
@@ -97,6 +97,68 @@ class _TareasScreenState extends State<TareasScreen> {
         ],
       ),
     );
+  }
+
+  Future<void> mostrarDialogoEditarObjetivo(Objetivo objetivo) async {
+    final controlador = TextEditingController(text: objetivo.nombre);
+    await showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Editar objetivo'),
+        content: TextField(
+          controller: controlador,
+          decoration: const InputDecoration(labelText: 'Nombre'),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancelar'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              Navigator.pop(context);
+              await ObjetivoService.update(
+                objetivo.id!,
+                Objetivo(
+                  id: objetivo.id,
+                  nombre: controlador.text,
+                  proyectoId: objetivo.proyectoId,
+                ),
+              );
+              cargarDatos();
+            },
+            child: const Text('Guardar'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> confirmarEliminarObjetivo(Objetivo objetivo) async {
+    final confirmado = await showDialog<bool>(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Eliminar objetivo'),
+        content:
+            Text('Se eliminara "${objetivo.getNombre()}" y todas sus tareas'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancelar'),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            onPressed: () => Navigator.pop(context, true),
+            child:
+                const Text('Eliminar', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
+    if (confirmado == true) {
+      await ObjetivoService.delete(objetivo.id!);
+      cargarDatos();
+    }
   }
 
   Future<void> mostrarDialogoNuevaTarea() async {
@@ -118,36 +180,36 @@ class _TareasScreenState extends State<TareasScreen> {
         builder: (ctx, actualizarDialogo) => AlertDialog(
           title: const Text('Nueva tarea'),
           content: Column(mainAxisSize: MainAxisSize.min, children: [
-
             DropdownButtonFormField<int>(
-              value: objetivoElegido,
+              initialValue: objetivoElegido,
               decoration: const InputDecoration(labelText: 'Objetivo'),
-              items: objetivos.map((o) => DropdownMenuItem(
-                value: o.id,
-                child: Text(o.getNombre()),
-              )).toList(),
-              onChanged: (valor) => actualizarDialogo(() => objetivoElegido = valor!),
+              items: objetivos
+                  .map((o) => DropdownMenuItem(
+                        value: o.id,
+                        child: Text(o.getNombre()),
+                      ))
+                  .toList(),
+              onChanged: (valor) =>
+                  actualizarDialogo(() => objetivoElegido = valor!),
             ),
             const SizedBox(height: 8),
-
             TextField(
               controller: controladorTitulo,
               decoration: const InputDecoration(labelText: 'Título'),
             ),
             const SizedBox(height: 8),
-
             DropdownButtonFormField<int>(
-              value: prioridad,
+              initialValue: prioridad,
               decoration: const InputDecoration(labelText: 'Prioridad'),
               items: const [
                 DropdownMenuItem(value: 1, child: Text('1 — Baja')),
                 DropdownMenuItem(value: 2, child: Text('2 — Media')),
                 DropdownMenuItem(value: 3, child: Text('3 — Alta')),
               ],
-              onChanged: (valor) => actualizarDialogo(() => prioridad = valor ?? 1),
+              onChanged: (valor) =>
+                  actualizarDialogo(() => prioridad = valor ?? 1),
             ),
             const SizedBox(height: 8),
-
             Row(children: [
               Text(fechaLimite == null
                   ? 'Sin fecha'
@@ -161,7 +223,8 @@ class _TareasScreenState extends State<TareasScreen> {
                     firstDate: DateTime.now(),
                     lastDate: DateTime(2030),
                   );
-                  if (fecha != null) actualizarDialogo(() => fechaLimite = fecha);
+                  if (fecha != null)
+                    actualizarDialogo(() => fechaLimite = fecha);
                 },
                 child: const Text('Elegir fecha'),
               ),
@@ -191,6 +254,80 @@ class _TareasScreenState extends State<TareasScreen> {
     );
   }
 
+  Future<void> mostrarDialogoEditarTarea(Tarea tarea) async {
+    final controladorTitulo = TextEditingController(text: tarea.titulo);
+    int prioridad = tarea.prioridad;
+    DateTime? fechaLimite = tarea.fechaLimite;
+
+    await showDialog(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, actualizarDialogo) => AlertDialog(
+          title: const Text('Editar tarea'),
+          content: Column(mainAxisSize: MainAxisSize.min, children: [
+            TextField(
+              controller: controladorTitulo,
+              decoration: const InputDecoration(labelText: 'Título'),
+            ),
+            const SizedBox(height: 8),
+            DropdownButtonFormField<int>(
+              initialValue: prioridad,
+              decoration: const InputDecoration(labelText: 'Prioridad'),
+              items: const [
+                DropdownMenuItem(value: 1, child: Text('1 — Baja')),
+                DropdownMenuItem(value: 2, child: Text('2 — Media')),
+                DropdownMenuItem(value: 3, child: Text('3 — Alta')),
+              ],
+              onChanged: (valor) =>
+                  actualizarDialogo(() => prioridad = valor ?? 1),
+            ),
+            const SizedBox(height: 8),
+            Row(children: [
+              Text(fechaLimite == null
+                  ? 'Sin fecha'
+                  : fechaLimite!.toLocal().toString().split(' ')[0]),
+              const Spacer(),
+              TextButton(
+                onPressed: () async {
+                  final fecha = await showDatePicker(
+                    context: ctx,
+                    initialDate: fechaLimite ?? DateTime.now(),
+                    firstDate: DateTime.now(),
+                    lastDate: DateTime(2030),
+                  );
+                  if (fecha != null)
+                    actualizarDialogo(() => fechaLimite = fecha);
+                },
+                child: const Text('Cambiar fecha'),
+              ),
+            ]),
+          ]),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text('Cancelar'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                Navigator.pop(ctx);
+                await TareaService.update(
+                  tarea.id!,
+                  tarea.copyWith(
+                    titulo: controladorTitulo.text,
+                    prioridad: prioridad,
+                    fechaLimite: fechaLimite,
+                  ),
+                );
+                cargarDatos();
+              },
+              child: const Text('Guardar'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final tareasMostradas = obtenerTareasMostradas();
@@ -203,18 +340,23 @@ class _TareasScreenState extends State<TareasScreen> {
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Colors.white,
         actions: [
-          // Selector de estrategia de ordenación — patrón Strategy
           DropdownButton<String>(
             value: ordenActual,
             dropdownColor: Theme.of(context).colorScheme.primary,
             underline: const SizedBox(),
             items: const [
-              DropdownMenuItem(value: 'prioridad',
-                  child: Text('↑ Prioridad', style: TextStyle(color: Colors.white))),
-              DropdownMenuItem(value: 'fecha',
-                  child: Text('📅 Fecha', style: TextStyle(color: Colors.white))),
-              DropdownMenuItem(value: 'nombre',
-                  child: Text('🔤 Nombre', style: TextStyle(color: Colors.white))),
+              DropdownMenuItem(
+                  value: 'prioridad',
+                  child: Text('↑ Prioridad',
+                      style: TextStyle(color: Colors.white))),
+              DropdownMenuItem(
+                  value: 'fecha',
+                  child:
+                      Text('📅 Fecha', style: TextStyle(color: Colors.white))),
+              DropdownMenuItem(
+                  value: 'nombre',
+                  child:
+                      Text('🔤 Nombre', style: TextStyle(color: Colors.white))),
             ],
             onChanged: (valor) => cambiarOrden(valor!),
           ),
@@ -224,114 +366,141 @@ class _TareasScreenState extends State<TareasScreen> {
       body: cargando
           ? const Center(child: CircularProgressIndicator())
           : Column(children: [
-
-        // Chips para filtrar por objetivo
-        if (objetivos.isNotEmpty)
-          SizedBox(
-            height: 50,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 6),
-                  child: FilterChip(
-                    label: const Text('Todos'),
-                    selected: objetivoFiltrado == null,
-                    onSelected: (_) => setState(() => objetivoFiltrado = null),
-                  ),
-                ),
-                ...objetivos.map((objetivo) => Padding(
-                  padding: const EdgeInsets.only(right: 6),
-                  child: FilterChip(
-                    label: Text(objetivo.getNombre()),
-                    selected: objetivoFiltrado == objetivo.id,
-                    onSelected: (_) => setState(() => objetivoFiltrado = objetivo.id),
-                  ),
-                )),
-              ],
-            ),
-          ),
-
-        // Lista de tareas ordenadas y filtradas
-        Expanded(
-          child: tareasMostradas.isEmpty
-              ? const Center(child: Text('Sin tareas aún'))
-              : ListView.builder(
-            itemCount: tareasMostradas.length,
-            itemBuilder: (_, indice) {
-              final tarea = tareasMostradas[indice];
-              final nombreObjetivo = objetivos
-                  .firstWhere(
-                    (o) => o.id == tarea.objetivoId,
-                orElse: () => Objetivo(nombre: '?', proyectoId: 0),
-              )
-                  .getNombre();
-
-              return Card(
-                margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                child: ListTile(
-                  leading: Checkbox(
-                    value: tarea.completada,
-                    onChanged: (_) async {
-                      await TareaService.update(
-                        tarea.id!,
-                        tarea.copyWith(completada: !tarea.completada),
-                      );
-                      cargarDatos();
-                    },
-                  ),
-                  title: Text(
-                    tarea.getNombre(),
-                    style: TextStyle(
-                      decoration: tarea.completada
-                          ? TextDecoration.lineThrough
-                          : null,
-                      color: tarea.completada ? Colors.grey : null,
-                    ),
-                  ),
-                  subtitle: Text(
-                    '📁 $nombreObjetivo  •  '
-                        '${tarea.fechaLimite != null ? "📅 ${tarea.fechaLimite!.toLocal().toString().split(" ")[0]}" : "Sin fecha"}',
-                  ),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
+              // chips para filtrar por objetivo
+              if (objetivos.isNotEmpty)
+                SizedBox(
+                  height: 50,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                     children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 2),
-                        decoration: BoxDecoration(
-                          color: coloresPrioridad[tarea.prioridad]!
-                              .withOpacity(0.15),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                              color: coloresPrioridad[tarea.prioridad]!),
-                        ),
-                        child: Text(
-                          etiquetasPrioridad[tarea.prioridad]!,
-                          style: TextStyle(
-                            color: coloresPrioridad[tarea.prioridad],
-                            fontSize: 11,
-                          ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 6),
+                        child: FilterChip(
+                          label: const Text('Todos'),
+                          selected: objetivoFiltrado == null,
+                          onSelected: (_) =>
+                              setState(() => objetivoFiltrado = null),
                         ),
                       ),
-                      IconButton(
-                        icon: const Icon(Icons.delete,
-                            color: Colors.red, size: 20),
-                        onPressed: () async {
-                          await TareaService.delete(tarea.id!);
-                          cargarDatos();
-                        },
-                      ),
+                      ...objetivos.map((objetivo) => Padding(
+                            padding: const EdgeInsets.only(right: 6),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                FilterChip(
+                                  label: Text(objetivo.getNombre()),
+                                  selected: objetivoFiltrado == objetivo.id,
+                                  onSelected: (_) => setState(
+                                      () => objetivoFiltrado = objetivo.id),
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.edit, size: 16),
+                                  onPressed: () =>
+                                      mostrarDialogoEditarObjetivo(objetivo),
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.delete,
+                                      size: 16, color: Colors.red),
+                                  onPressed: () =>
+                                      confirmarEliminarObjetivo(objetivo),
+                                ),
+                              ],
+                            ),
+                          )),
                     ],
                   ),
                 ),
-              );
-            },
-          ),
-        ),
-      ]),
 
+              // lista de tareas
+              Expanded(
+                child: tareasMostradas.isEmpty
+                    ? const Center(child: Text('Sin tareas aún'))
+                    : ListView.builder(
+                        itemCount: tareasMostradas.length,
+                        itemBuilder: (_, indice) {
+                          final tarea = tareasMostradas[indice];
+                          final nombreObjetivo = objetivos
+                              .firstWhere(
+                                (o) => o.id == tarea.objetivoId,
+                                orElse: () =>
+                                    Objetivo(nombre: '?', proyectoId: 0),
+                              )
+                              .getNombre();
+
+                          return Card(
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 4),
+                            child: ListTile(
+                              leading: Checkbox(
+                                value: tarea.completada,
+                                onChanged: (_) async {
+                                  await TareaService.update(
+                                    tarea.id!,
+                                    tarea.copyWith(
+                                        completada: !tarea.completada),
+                                  );
+                                  cargarDatos();
+                                },
+                              ),
+                              title: Text(
+                                tarea.getNombre(),
+                                style: TextStyle(
+                                  decoration: tarea.completada
+                                      ? TextDecoration.lineThrough
+                                      : null,
+                                  color: tarea.completada ? Colors.grey : null,
+                                ),
+                              ),
+                              subtitle: Text(
+                                '📁 $nombreObjetivo  •  '
+                                '${tarea.fechaLimite != null ? "📅 ${tarea.fechaLimite!.toLocal().toString().split(" ")[0]}" : "Sin fecha"}',
+                              ),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8, vertical: 2),
+                                    decoration: BoxDecoration(
+                                      color: coloresPrioridad[tarea.prioridad]!
+                                          .withValues(alpha: 0.15),
+                                      borderRadius: BorderRadius.circular(12),
+                                      border: Border.all(
+                                          color: coloresPrioridad[
+                                              tarea.prioridad]!),
+                                    ),
+                                    child: Text(
+                                      etiquetasPrioridad[tarea.prioridad]!,
+                                      style: TextStyle(
+                                        color:
+                                            coloresPrioridad[tarea.prioridad],
+                                        fontSize: 11,
+                                      ),
+                                    ),
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.edit, size: 20),
+                                    onPressed: () =>
+                                        mostrarDialogoEditarTarea(tarea),
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.delete,
+                                        color: Colors.red, size: 20),
+                                    onPressed: () async {
+                                      await TareaService.delete(tarea.id!);
+                                      cargarDatos();
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+              ),
+            ]),
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [

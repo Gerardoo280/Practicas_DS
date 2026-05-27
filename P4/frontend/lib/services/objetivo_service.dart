@@ -14,6 +14,12 @@ class ObjetivoService {
     return Objetivo.fromJson(datos);
   }
 
+  static Future<Objetivo> update(int id, Objetivo objetivo) async {
+    final datos = await ApiService.patch(
+        '/objetivos/$id', {'objetivo': objetivo.toJson()});
+    return Objetivo.fromJson(datos);
+  }
+
   static Future<void> delete(int id) async =>
       ApiService.delete('/objetivos/$id');
 }
