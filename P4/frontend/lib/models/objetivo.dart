@@ -13,19 +13,24 @@ class Objetivo implements ElementoProyecto {
   @override
   String getNombre() => nombre;
 
-  void add(ElementoProyecto elemento) => hijos.add(elemento);
-  void remove(ElementoProyecto elemento) => hijos.remove(elemento);
+  void add(ElementoProyecto elemento) {
+    hijos.add(elemento);
+  }
+
+  void remove(ElementoProyecto elemento) {
+    hijos.remove(elemento);
+  }
 
   List<Tarea> getTareas() => hijos.whereType<Tarea>().toList();
 
   factory Objetivo.fromJson(Map<String, dynamic> json) => Objetivo(
-    id: json['id'],
-    nombre: json['nombre'],
-    proyectoId: json['proyecto_id'],
-  );
+        id: json['id'],
+        nombre: json['nombre'],
+        proyectoId: json['proyecto_id'],
+      );
 
   Map<String, dynamic> toJson() => {
-    'nombre': nombre,
-    'proyecto_id': proyectoId,
-  };
+        'nombre': nombre,
+        'proyecto_id': proyectoId,
+      };
 }

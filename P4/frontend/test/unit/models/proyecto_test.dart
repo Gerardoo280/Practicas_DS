@@ -40,5 +40,17 @@ void main() {
       expect(ordenadas.first.prioridad, 3);
       expect(ordenadas.last.prioridad, 1);
     });
+
+    test('No permite agregar un proyecto dentro de otro proyecto', () {
+      final proyectoPadre = Proyecto(
+          id: 1, nombre: 'Proyecto General', estrategia: OrdenarPorPrioridad());
+      final proyectoHijo = Proyecto(
+          id: 2,
+          nombre: 'Subproyecto Colado',
+          estrategia: OrdenarPorPrioridad());
+
+      // Comprobamos que el método add lanza un error si intentas meter un Proyecto
+      expect(() => proyectoPadre.add(proyectoHijo), throwsArgumentError);
+    });
   });
 }

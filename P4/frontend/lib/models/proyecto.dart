@@ -21,8 +21,17 @@ class Proyecto implements ElementoProyecto {
   @override
   String getNombre() => nombre;
 
-  void add(ElementoProyecto elemento) => hijos.add(elemento);
-  void remove(ElementoProyecto elemento) => hijos.remove(elemento);
+  void add(ElementoProyecto elemento) {
+    if (elemento is Proyecto) {
+      throw ArgumentError(
+          "No se puede añadir un proyecto dentro de otro proyecto");
+    }
+    hijos.add(elemento);
+  }
+
+  void remove(ElementoProyecto elemento) {
+    hijos.remove(elemento);
+  }
 
   List<Objetivo> getObjetivos() => hijos.whereType<Objetivo>().toList();
 
@@ -49,7 +58,7 @@ class Proyecto implements ElementoProyecto {
       );
 
   Map<String, dynamic> toJson() => {
-    'nombre': nombre,
-    'descripcion': descripcion,
-  };
+        'nombre': nombre,
+        'descripcion': descripcion,
+      };
 }
