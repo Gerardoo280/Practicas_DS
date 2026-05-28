@@ -3,7 +3,7 @@ import 'objetivo.dart';
 import 'tarea.dart';
 import '../strategies/i_orden_strategy.dart';
 
-// Compuesto raíz del patrón Composite — contiene objetivos
+// patron composite
 class Proyecto implements ElementoProyecto {
   final int? id;
   final String nombre;

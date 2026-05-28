@@ -2,7 +2,6 @@ import 'elemento_proyecto.dart';
 import 'tarea.dart';
 import 'proyecto.dart';
 
-// Compuesto del patrón Composite — contiene tareas
 class Objetivo implements ElementoProyecto {
   final int? id;
   final String nombre;
