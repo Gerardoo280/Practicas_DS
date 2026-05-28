@@ -5,18 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9cc1df48-85bb-41bb-9b3e-80f66ac8a748" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/P4/backend/db/schema.rb" beforeDir="false" afterPath="$PROJECT_DIR$/P4/backend/db/schema.rb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/P4/frontend/lib/models/objetivo.dart" beforeDir="false" afterPath="$PROJECT_DIR$/P4/frontend/lib/models/objetivo.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P4/frontend/lib/models/proyecto.dart" beforeDir="false" afterPath="$PROJECT_DIR$/P4/frontend/lib/models/proyecto.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P4/frontend/lib/models/tarea.dart" beforeDir="false" afterPath="$PROJECT_DIR$/P4/frontend/lib/models/tarea.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P4/frontend/lib/screens/proyectos_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/P4/frontend/lib/screens/proyectos_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P4/frontend/lib/screens/tareas_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/P4/frontend/lib/screens/tareas_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P4/frontend/lib/services/api_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/P4/frontend/lib/services/api_service.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P4/frontend/lib/services/objetivo_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/P4/frontend/lib/services/objetivo_service.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P4/frontend/lib/services/proyecto_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/P4/frontend/lib/services/proyecto_service.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P4/frontend/lib/services/tarea_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/P4/frontend/lib/services/tarea_service.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P4/frontend/lib/strategies/ordenar_por_fecha.dart" beforeDir="false" afterPath="$PROJECT_DIR$/P4/frontend/lib/strategies/ordenar_por_fecha.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/P4/frontend/lib/strategies/ordenar_por_nombre.dart" beforeDir="false" afterPath="$PROJECT_DIR$/P4/frontend/lib/strategies/ordenar_por_nombre.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
