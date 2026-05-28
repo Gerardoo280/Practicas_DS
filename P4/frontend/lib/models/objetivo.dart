@@ -14,6 +14,9 @@ class Objetivo implements ElementoProyecto {
   String getNombre() => nombre;
 
   void add(ElementoProyecto elemento) {
+    if (elemento is Proyecto || elemento is Objetivo) {
+      throw Exception('Un objetivo solo puede contener tareas');
+    }
     hijos.add(elemento);
   }
 
